@@ -1,0 +1,62 @@
+USUARIO
+    id
+    username
+    email
+    senha_hash
+    nome_completo
+    seguidores_count
+    seguindo_count
+
+AUTOR
+    id
+    nome
+    data_nascimento
+    descricao
+    fas_count --ativado pela trigger de seguidor que é usada para seguir outras pessoas
+    
+LIVRO
+    id
+    id_autor
+    nome
+    isbn
+    data_publicacao
+    descricao
+
+GENERO
+    id
+    nome
+
+LIVRO_GENERO
+    id_livro
+    id_genero
+    PRIMARY KEY (id_livro, id_genero)
+
+AUTOR_GENERO
+    id_autor
+    id_genero
+    PRIMARY KEY (id_autor, id_genero)
+
+AVALIACAO
+    id
+    id_usuario
+    tipo        -- livro 1/autor 2/genero 3
+    id_alvo
+    nota
+    texto
+    data_publicacao
+
+COMENTARIO
+    id
+    id_usuario
+    tipo_alvo        -- 'post 2', 'avaliacao 1'
+    id_alvo
+    id_pai           -- NULL = comentário raiz
+    texto
+    data_publicacao
+
+SEGUIDOR **criar trigger para atualizacao na tabela do usuario quando seguir ou deseguir
+    id_seguidor
+    id_seguido
+    status        -- 'ativo', 'bloqueado', 'pendente'
+    data_inicio
+    PRIMARY KEY (id_seguidor, id_seguido)

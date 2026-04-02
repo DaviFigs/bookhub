@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %} Home {% endblock %}
+
+{% block content %}
+
+    {% if username %}
+        <p>Nome: {{ username }}</p>
+        <p>Email: {{ email }}</p>
+    {% endif %}
+
+    <img src="{% static 'img/eu3.jpeg' %}" alt="Logo" width="200px">
+
+    <form method="GET" action="{% url 'buscar' %}">
+    {% csrf_token %}
+    
+    <input type="text" name="query">
+    
+    <button type="submit">Enviar</button>
+</form>
+
+{% endblock %}
+
