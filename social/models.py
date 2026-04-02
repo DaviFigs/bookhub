@@ -13,6 +13,8 @@ class Avaliacao(models.Model):
     nota = models.FloatField(validators=[MinValueValidator(0), MaxValueValidator(5)])
     data_publicacao = models.DateTimeField(auto_now_add=True)
     visibilidade = models.BooleanField(default=True)
+    upvotes = models.PositiveIntegerField(default=0)
+    downvotes = models.PositiveIntegerField(default=0)
 
     def __str__(self):
         return f"Avaliação de {self.usuario} - {self.nota}/5"
@@ -20,6 +22,23 @@ class Avaliacao(models.Model):
     class Meta:
         verbose_name = "Avaliação"
         verbose_name_plural = "Avaliações"
+
+
+class AvaliacaoVote(models.Model):
+    VOTO_CHOICES = [
+        (1, 'Upvote'),
+        (-1, 'Downvote'),
+    ]
+
+    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE, related_name='avaliacao_votes')
+    avaliacao = models.ForeignKey(Avaliacao, on_delete=models.CASCADE, related_name='votes')
+    voto = models.SmallIntegerField(choices=VOTO_CHOICES)
+    data_voto = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['usuario', 'avaliacao'], name='unique_vote')
+        ]
 
 class Comentario(models.Model):
     TIPO_CHOICES = [

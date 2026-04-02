@@ -1,30 +1,88 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{% static 'css/base.css' %}">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
-    <title>{% block title %}  {% endblock %}</title>
-
-</head>
-<body>
-    <nav class="navbar bg-body-tertiary">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="#">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-book-half" viewBox="0 0 16 16">
-                <path d="M8.5 2.687c.654-.689 1.782-.886 3.112-.752 1.234.124 2.503.523 3.388.893v9.923c-.918-.35-2.107-.692-3.287-.81-1.094-.111-2.278-.039-3.213.492zM8 1.783C7.015.936 5.587.81 4.287.94c-1.514.153-3.042.672-3.994 1.105A.5.5 0 0 0 0 2.5v11a.5.5 0 0 0 .707.455c.882-.4 2.303-.881 3.68-1.02 1.409-.142 2.59.087 3.223.877a.5.5 0 0 0 .78 0c.633-.79 1.814-1.019 3.222-.877 1.378.139 2.8.62 3.681 1.02A.5.5 0 0 0 16 13.5v-11a.5.5 0 0 0-.293-.455c-.952-.433-2.48-.952-3.994-1.105C10.413.809 8.985.936 8 1.783"/>
-            </svg>
-            BookHub
-            </a>
-        </div>
-    </nav>
-
-    {% block content %}
-
-    {% endblock %}
-
+    <meta name="description" content="BookHub - Seu portal de leitura e compartilhamento de livros">
     
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    <title>{% block title %}BookHub{% endblock %}</title>
+</head>
+<body class="d-flex flex-column min-vh-100">
+    <!-- HEADER / NAVBAR -->
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
+            <div class="container-lg">
+                <!-- Logo/Brand -->
+                <a class="navbar-brand fw-bold d-flex align-items-center gap-2" href="{% url 'index' %}">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor" class="bi bi-book-half" viewBox="0 0 16 16">
+                        <path d="M8.5 2.687c.654-.689 1.782-.886 3.112-.752 1.234.124 2.503.523 3.388.893v9.923c-.918-.35-2.107-.692-3.287-.81-1.094-.111-2.278-.039-3.213.492zM8 1.783C7.015.936 5.587.81 4.287.94c-1.514.153-3.042.672-3.994 1.105A.5.5 0 0 0 0 2.5v11a.5.5 0 0 0 .707.455c.882-.4 2.303-.881 3.68-1.02 1.409-.142 2.59.087 3.223.877a.5.5 0 0 0 .78 0c.633-.79 1.814-1.019 3.222-.877 1.378.139 2.8.62 3.681 1.02A.5.5 0 0 0 16 13.5v-11a.5.5 0 0 0-.293-.455c-.952-.433-2.48-.952-3.994-1.105C10.413.809 8.985.936 8 1.783"/>
+                    </svg>
+                    <span class="d-none d-sm-inline">BookHub</span>
+                </a>
+
+                <!-- Navbar Toggle Button (Mobile) -->
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <!-- Navbar Links -->
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav me-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'index' %}">Início</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Livros</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Comunidade</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Sobre</a>
+                        </li>
+                    </ul>
+
+                    <!-- Search Form -->
+                    <form class="d-flex gap-2 me-3" role="search" action="{% url 'buscar'%}" method="GET">
+                        {% csrf_token %}
+                        <input name="query" class="form-control form-control-sm rounded-pill" type="search" placeholder="Pesquisar livros..." aria-label="Pesquisar">
+                        <button class="btn btn-primary btn-sm rounded-pill px-3" type="submit">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                                <path d="M11.742 10.344h.734a1.5 1.5 0 0 0 1.415-2.27L13.969 8l.738.844a1.5 1.5 0 0 0-1.415 2.27h-.734zm1.494-4.594h.734a1.5 1.5 0 0 0 1.415-2.27L14.969 2l.738.844a1.5 1.5 0 0 0-1.415 2.27h-.734zM7 6.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5zm0-1a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"/>
+                            </svg>
+                        </button>
+                    </form>
+
+                    <!-- Login Button -->
+                    <a class="nav-link btn btn-primary text-white px-3" href="#">Entrar</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main class="flex-grow-1">
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-dark text-light footer-compact">
+        <div class="container-lg d-flex align-items-center justify-content-between">
+            <p class="text-muted small mb-0">&copy; 2024 BookHub. Todos os direitos reservados.</p>
+            <div>
+                <a href="#" class="text-muted text-decoration-none small me-3">Privacidade</a>
+                <a href="#" class="text-muted text-decoration-none small">Termos de Serviço</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP8Is33hheSh3V9Z+ZVzRVWARkwNC3DyTR8" crossorigin="anonymous"></script>
 </body>
 </html>

@@ -5,12 +5,19 @@
 
 {% block content %}
 
-    {% if username %}
-        <p>Nome: {{ username }}</p>
-        <p>Email: {{ email }}</p>
+    {% if livros %}
+        {% for livro in livros %}
+            <p>Titulo: {{ livro.titulo }}</p>
+            <p>Autor: {{ livro.autor }}</p>
+            <p>Ano: {{ livro.ano }}</p>
+        {% endfor %}
+        <hr>
+        {% for autor in autores %}
+            <p>Nome: {{ autor.nome }}</p>
+            <p>Primeira Publicação: {{ autor.primeira_publicacao }}</p>
+            <p>Quantidade de Obras: {{ autor.quantidade_obras }}</p>
+        {% endfor %}
     {% endif %}
-
-    <img src="{% static 'img/eu3.jpeg' %}" alt="Logo" width="200px">
 
     <form method="GET" action="{% url 'buscar' %}">
     {% csrf_token %}

@@ -1,3 +1,7 @@
 from django.shortcuts import render
 
-# Create your views here.
+def comentario(request, id):
+    pass
+
+def avaliacao(request, id):
+    pass
