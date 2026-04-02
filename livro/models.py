@@ -1,13 +1,18 @@
 from django.db import models
-from django.core.validators import MinValueValidator, MaxValueValidator
-
+from django.core.validators import MinValueValidator, MaxValueValidator, RegexValidator
 
 
 class Autor(models.Model):
-    nome = models.CharField(max_length=100)
+    nome = models.CharField(max_length=255)
+    foto = models.ImageField(upload_to='fotos_autores/', null=True, blank=True)
     data_nascimento = models.DateField()
+    data_falecimento = models.DateField(null=True, blank=True)
+    nacionalidade = models.CharField(max_length=100, null=True, blank=True)
     descricao = models.TextField()
     seguidores_count = models.IntegerField(default=0)
+    data_criacao = models.DateTimeField(auto_now_add=True)
+    data_atualizacao = models.DateTimeField(auto_now=True)
+    ativo = models.BooleanField(default=True)
 
     def __str__(self):
         return self.nome
@@ -15,13 +20,32 @@ class Autor(models.Model):
     class Meta:
         verbose_name = "Autor"
         verbose_name_plural = "Autores"
+        ordering = ['nome']
+        indexes = [
+            models.Index(fields=['nome']),
+            models.Index(fields=['ativo']),
+        ]
+
 
 class Livro(models.Model):
     autor = models.ForeignKey(Autor, on_delete=models.CASCADE, related_name='livros')
-    nome = models.CharField(max_length=100)
-    isbn = models.CharField(max_length=20, unique=True)
+    nome = models.CharField(max_length=255)
+    isbn = models.CharField(
+        max_length=20,
+        unique=True,
+        validators=[
+            RegexValidator(
+                regex=r'^\d{10}(\d{3})?$',
+                message='ISBN deve ter 10 ou 13 dígitos'
+            )
+        ]
+    )
+    capa = models.ImageField(upload_to='capas_livros/', null=True, blank=True)
     data_publicacao = models.DateField()
     descricao = models.TextField()
+    data_criacao = models.DateTimeField(auto_now_add=True)
+    data_atualizacao = models.DateTimeField(auto_now=True)
+    ativo = models.BooleanField(default=True)
 
     def __str__(self):
         return self.nome
@@ -29,9 +53,18 @@ class Livro(models.Model):
     class Meta:
         verbose_name = "Livro"
         verbose_name_plural = "Livros"
+        ordering = ['-data_criacao']
+        indexes = [
+            models.Index(fields=['nome']),
+            models.Index(fields=['isbn']),
+            models.Index(fields=['autor', 'ativo']),
+        ]
+
 
 class Genero(models.Model):
-    nome = models.CharField(max_length=50, unique=True)
+    nome = models.CharField(max_length=100, unique=True)
+    descricao = models.TextField(blank=True)
+    data_criacao = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.nome
@@ -39,6 +72,8 @@ class Genero(models.Model):
     class Meta:
         verbose_name = "Gênero"
         verbose_name_plural = "Gêneros"
+        ordering = ['nome']
+
 
 class LivroGenero(models.Model):
     livro = models.ForeignKey(Livro, on_delete=models.CASCADE, related_name='generos')
@@ -47,7 +82,8 @@ class LivroGenero(models.Model):
     class Meta:
         unique_together = ('livro', 'genero')
         verbose_name = "Livro-Gênero"
-        verbose_name_plural = "Livro-Gêneros" 
+        verbose_name_plural = "Livro-Gêneros"
+
 
 class AutorGenero(models.Model):
     autor = models.ForeignKey(Autor, on_delete=models.CASCADE, related_name='generos')
