@@ -27,7 +27,3 @@ class Usuario(AbstractUser):
         verbose_name = "Usuário"
         verbose_name_plural = "Usuários"
         ordering = ['-data_criacao']
-        indexes = [
-            models.Index(fields=['username']),
-            models.Index(fields=['email']),
-        ]

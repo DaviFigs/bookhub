@@ -27,10 +27,6 @@ class Avaliacao(models.Model):
         verbose_name = "Avaliação"
         verbose_name_plural = "Avaliações"
         ordering = ['-data_publicacao']
-        indexes = [
-            models.Index(fields=['usuario', 'data_publicacao']),
-            models.Index(fields=['tipo', 'id_alvo']),
-        ]
         unique_together = ('usuario', 'tipo', 'id_alvo')
 
 
@@ -75,11 +71,7 @@ class Comentario(models.Model):
     class Meta:
         verbose_name = "Comentário"
         verbose_name_plural = "Comentários"
-        ordering = ['-data_publicacao']
-        indexes = [
-            models.Index(fields=['usuario', 'data_publicacao']),
-            models.Index(fields=['tipo', 'id_alvo']),
-        ]
+        
 
 
 class ComentarioLike(models.Model):
@@ -102,9 +94,7 @@ class Seguidor(models.Model):
         unique_together = ('usuario', 'seguindo')
         verbose_name = "Seguidor"
         verbose_name_plural = "Seguidores"
-        indexes = [
-            models.Index(fields=['usuario', 'seguindo']),
-        ]
+        
 
 
 class SeguidorAutor(models.Model):
@@ -145,8 +135,3 @@ class StatusLeitura(models.Model):
         unique_together = ('usuario', 'livro')
         verbose_name = "Status de Leitura"
         verbose_name_plural = "Status de Leituras"
-        ordering = ['-data_atualizacao']
-        indexes = [
-            models.Index(fields=['usuario', 'status']),
-            models.Index(fields=['livro', 'status']),
-        ]

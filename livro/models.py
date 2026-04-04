@@ -20,11 +20,6 @@ class Autor(models.Model):
     class Meta:
         verbose_name = "Autor"
         verbose_name_plural = "Autores"
-        ordering = ['nome']
-        indexes = [
-            models.Index(fields=['nome']),
-            models.Index(fields=['ativo']),
-        ]
 
 
 class Livro(models.Model):
@@ -33,12 +28,6 @@ class Livro(models.Model):
     isbn = models.CharField(
         max_length=20,
         unique=True,
-        validators=[
-            RegexValidator(
-                regex=r'^\d{10}(\d{3})?$',
-                message='ISBN deve ter 10 ou 13 dígitos'
-            )
-        ]
     )
     capa = models.ImageField(upload_to='capas_livros/', null=True, blank=True)
     data_publicacao = models.DateField()
@@ -53,12 +42,6 @@ class Livro(models.Model):
     class Meta:
         verbose_name = "Livro"
         verbose_name_plural = "Livros"
-        ordering = ['-data_criacao']
-        indexes = [
-            models.Index(fields=['nome']),
-            models.Index(fields=['isbn']),
-            models.Index(fields=['autor', 'ativo']),
-        ]
 
 
 class Genero(models.Model):
@@ -72,7 +55,6 @@ class Genero(models.Model):
     class Meta:
         verbose_name = "Gênero"
         verbose_name_plural = "Gêneros"
-        ordering = ['nome']
 
 
 class LivroGenero(models.Model):
